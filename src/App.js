@@ -65,8 +65,7 @@ function App() {
   }, [asterisk, randomNumber, stage]);
 
   useEffect(() => {
-    const realAttempts = attempts.filter(a => a !== null);
-    if (realAttempts.length && realAttempts.every(a => a === false)) {
+    if (attempts.some(a => a === false)) {
       setTimeout(() => {
         const randomNumber = getRandomArbitraryDialableAsString();
         setRandomNumber(randomNumber);
@@ -78,22 +77,23 @@ function App() {
     }
   }, [attempts]);
 
-  const onSpacebar = useCallback(({ key }) => {
-    if (key === ' ') {
-      setTime(new Date());
-      setAsterisk(asterisk + 1);
-      setAttempts(attempts.map((_, i) => {
-        if (i <= asterisk) {
-          return timeInRange(time)
-        } else {
-          return null
-        }
-      }));
-    }
+  const nextHandler = useCallback(() => {
+    setTime(new Date());
+    setAsterisk(asterisk + 1);
+    setAttempts(attempts.map((_, i) => {
+      if (i === 0) {
+        return true;
+      }
+      else if (i <= asterisk) {
+        return timeInRange(time)
+      } else {
+        return null
+      }
+    }));
   }, [asterisk, setAsterisk, setAttempts, attempts, setTime, time]);
 
   return (
-    <div className="App" onKeyUp={onSpacebar} tabIndex={0}>
+    <div className="App" onClick={nextHandler} onKeyUp={nextHandler} tabIndex={0}>
       <header className="App-header">
         <RandomNumber
           randomNumber={randomNumber}
