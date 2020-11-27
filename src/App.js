@@ -54,6 +54,7 @@ function App() {
         const nextStage = stage + 1;
         setAsterisk(0);
         setAttempts(getNullArray(randomNumber, stage));
+        setTime(new Date());
         if (nextStage === randomNumber.length) {
           setRandomNumber(getRandomArbitraryDialableAsString());
           setStage(0);
@@ -80,7 +81,7 @@ function App() {
   const nextHandler = useCallback(() => {
     setTime(new Date());
     setAsterisk(asterisk + 1);
-    setAttempts(attempts.map((_, i) => {
+    const newAttempts = attempts.map((_, i) => {
       if (i === 0) {
         return true;
       }
@@ -89,7 +90,12 @@ function App() {
       } else {
         return null
       }
-    }));
+    });
+    if (newAttempts.some(a => a === false)) {
+      setAttempts(newAttempts.map(() => false));
+    } else {
+      setAttempts(newAttempts);
+    }
   }, [asterisk, setAsterisk, setAttempts, attempts, setTime, time]);
 
   return (

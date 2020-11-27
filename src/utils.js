@@ -16,5 +16,6 @@ export function getNullArray(randomNumber, stage) {
 
 export function timeInRange(time) {
   const now = new Date();
-  return now - time <= 2000;
+  const diff = now - time;
+  return diff <= 2000 && diff >= 300;
 }
